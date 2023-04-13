@@ -540,19 +540,20 @@ MonoBehaviour:
   _ikFacePosTarget: {fileID: 1428518364}
   _animator: {fileID: 5866666020380155108}
   _indexMouthClose: 0
-  _indexMouthNarrow: 0
-  _indexMouthRightCornerUp: 0
-  _indexMouthRightCornerDown: 0
-  _indexMouthLeftCornerUp: 0
-  _indexMouthLeftCornerDown: 0
-  _indexRightEyeClose: 0
-  _indexRightEyeOpen: 0
-  _indexLeftEyeClose: 0
-  _indexLeftEyeOpen: 0
-  _indexRightEyebrowUp: 0
-  _indexRightEyebrowDown: 0
-  _indexLeftEyebrowUp: 0
-  _indexLeftEyebrowDown: 0
+  _indexMouthOpen: 5
+  _indexMouthNarrow: 2
+  _indexMouthRightCornerUp: 8
+  _indexMouthRightCornerDown: 9
+  _indexMouthLeftCornerUp: 6
+  _indexMouthLeftCornerDown: 7
+  _indexRightEyeClose: 14
+  _indexRightEyeOpen: 15
+  _indexLeftEyeClose: 11
+  _indexLeftEyeOpen: 12
+  _indexRightEyebrowUp: 18
+  _indexRightEyebrowDown: 19
+  _indexLeftEyebrowUp: 16
+  _indexLeftEyebrowDown: 17
 --- !u!4 &639288308
 Transform:
   m_ObjectHideFlags: 0

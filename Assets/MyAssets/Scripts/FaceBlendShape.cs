@@ -23,6 +23,9 @@ public class FaceBlendShape : MonoBehaviour
     [SerializeField, Tooltip("口を閉じるブレンドシェイプの番号")]
     short _indexMouthClose = 0;
 
+    [SerializeField, Tooltip("口を開けるブレンドシェイプの番号")]
+    short _indexMouthOpen = 0;
+
     [SerializeField, Tooltip("口を狭めるブレンドシェイプの番号")]
     short _indexMouthNarrow = 0;
 
@@ -88,19 +91,89 @@ public class FaceBlendShape : MonoBehaviour
             _animator.transform.position = _neutralFacePos + new Vector3(_faceData.FacePosDiff.x, -_faceData.FacePosDiff.y) * 0.001f;
 
             //口の開閉
-            _faceSkin.SetBlendShapeWeight(_indexMouthClose, _faceData.MouthOpenDiff.y);
-            _faceSkin.SetBlendShapeWeight(_indexMouthNarrow, _faceData.MouthOpenDiff.x);
+            if(_faceData.MouthOpenDiff.y < 0f)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexMouthClose, -_faceData.MouthOpenDiff.y);
+            }
+            else
+            {
+                _faceSkin.SetBlendShapeWeight(_indexMouthOpen, _faceData.MouthOpenDiff.y);
+            }
+            if(_faceData.MouthOpenDiff.x < 0)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexMouthNarrow, -_faceData.MouthOpenDiff.x);
+            }
 
             //右口角
-            if (_faceData.MouthCornerUpDiff[0] < 0)
+            if (_faceData.MouthCornerUpDiff[0] > 0)
             {
-                _faceSkin.SetBlendShapeWeight(_indexMouthRightCornerUp, _faceData.MouthCornerUpDiff[0]);
+                _faceSkin.SetBlendShapeWeight(_indexMouthRightCornerUp, _faceData.MouthCornerUpDiff[0] * 50f);
                 _faceSkin.SetBlendShapeWeight(_indexMouthRightCornerDown, 0f);
             }
             else
             {
                 _faceSkin.SetBlendShapeWeight(_indexMouthRightCornerUp, 0f);
-                _faceSkin.SetBlendShapeWeight(_indexMouthRightCornerDown, _faceData.MouthCornerUpDiff[0]);
+                _faceSkin.SetBlendShapeWeight(_indexMouthRightCornerDown, -_faceData.MouthCornerUpDiff[0] * 50f);
+            }
+
+            //左口角
+            if (_faceData.MouthCornerUpDiff[1] > 0)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexMouthLeftCornerUp, _faceData.MouthCornerUpDiff[1] * 50f);
+                _faceSkin.SetBlendShapeWeight(_indexMouthLeftCornerDown, 0f);
+            }
+            else
+            {
+                _faceSkin.SetBlendShapeWeight(_indexMouthLeftCornerUp, 0f);
+                _faceSkin.SetBlendShapeWeight(_indexMouthLeftCornerDown, -_faceData.MouthCornerUpDiff[1] * 50f);
+            }
+
+            //右目
+            if (_faceData.EyesOpenDiff[0] > 0)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexRightEyeOpen, _faceData.EyesOpenDiff[0] * 50f);
+                _faceSkin.SetBlendShapeWeight(_indexRightEyeClose, 0f);
+            }
+            else
+            {
+                _faceSkin.SetBlendShapeWeight(_indexRightEyeOpen, 0f);
+                _faceSkin.SetBlendShapeWeight(_indexRightEyeClose, _faceData.EyesOpenDiff[0] * 50f);
+            }
+
+            //左目
+            if (_faceData.EyesOpenDiff[1] > 0)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyeOpen, _faceData.EyesOpenDiff[1] * 50f);
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyeClose, 0f);
+            }
+            else
+            {
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyeOpen, 0f);
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyeClose, _faceData.EyesOpenDiff[1] * 50f);
+            }
+
+            //右眉
+            if (_faceData.EyebrowUpDiff[0] > 0)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexRightEyebrowUp, _faceData.EyebrowUpDiff[0] * 50f);
+                _faceSkin.SetBlendShapeWeight(_indexRightEyebrowDown, 0f);
+            }
+            else
+            {
+                _faceSkin.SetBlendShapeWeight(_indexRightEyebrowUp, 0f);
+                _faceSkin.SetBlendShapeWeight(_indexRightEyebrowDown, -_faceData.EyebrowUpDiff[0] * 50f);
+            }
+
+            //左眉
+            if (_faceData.EyebrowUpDiff[1] > 0)
+            {
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyebrowUp, _faceData.EyebrowUpDiff[1] * 50f);
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyebrowDown, 0f);
+            }
+            else
+            {
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyebrowUp, 0f);
+                _faceSkin.SetBlendShapeWeight(_indexLeftEyebrowDown, -_faceData.EyebrowUpDiff[1] * 50f);
             }
         }
     }

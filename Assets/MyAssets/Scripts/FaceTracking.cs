@@ -66,7 +66,7 @@ public class FaceTracking : WebCamera, IGetFaceData
     float[] _eyesOpenDiff = null;
 
     /// <summary>眉パーツの上下量のズレ  [0,0]:右の内側 [1,0]:左の外側 [1,1]:右の左 [1,1]:左の左 正:上 負:下</summary>
-    float[][] _eyebrowUpDiff = null;
+    float[] _eyebrowUpDiff = null;
 
 
     public Vector2 FacePosDiff => _facePosDiff;
@@ -79,7 +79,7 @@ public class FaceTracking : WebCamera, IGetFaceData
 
     public float[] EyesOpenDiff => _eyesOpenDiff;
 
-    public float[][] EyebrowUpDiff => _eyebrowUpDiff;
+    public float[] EyebrowUpDiff => _eyebrowUpDiff;
     #endregion
 
 
@@ -110,7 +110,7 @@ public class FaceTracking : WebCamera, IGetFaceData
 
         _mouthCornerUpDiff = new float[2];
         _eyesOpenDiff = new float[2];
-        _eyebrowUpDiff = new float[2][];
+        _eyebrowUpDiff = new float[2];
     }
 
     /// <summary>顔認識したものを映像に反映する</summary>
@@ -324,8 +324,8 @@ public class FaceTracking : WebCamera, IGetFaceData
                                     Point baseMinX = cashe.First();
                                     Point baseMaxX = cashe.Last();
 
-                                    _mouthCornerUpDiff[0] = minX.Y - baseMinX.Y;
-                                    _mouthCornerUpDiff[1] = maxX.Y - baseMaxX.Y;
+                                    _mouthCornerUpDiff[0] = (minX.Y - baseMinX.Y) / (mouthRect.Height / 2f);
+                                    _mouthCornerUpDiff[1] = (maxX.Y - baseMaxX.Y) / (mouthRect.Height / 2f);
                                 }
                                 //partが外側 lipCashが内側
                                 else
@@ -340,8 +340,8 @@ public class FaceTracking : WebCamera, IGetFaceData
                                     Point baseMinX = cashe.First();
                                     Point baseMaxX = cashe.Last();
 
-                                    _mouthCornerUpDiff[0] = minX.Y - baseMinX.Y;
-                                    _mouthCornerUpDiff[1] = maxX.Y - baseMaxX.Y;
+                                    _mouthCornerUpDiff[0] = (minX.Y - baseMinX.Y) / (mouthRect.Height / 2f);
+                                    _mouthCornerUpDiff[1] = (maxX.Y - baseMaxX.Y) / (mouthRect.Height / 2f);
                                 }
                             }
 
@@ -371,16 +371,14 @@ public class FaceTracking : WebCamera, IGetFaceData
     /// <param name="points">目パーツを構成する座標</param>
     /// <param name="basePoints">目パーツを構成する基準の座標</param>
     /// <returns>眉を上にあげる割合 1以上:上げ 1:デフォルト 1未満:下げ</returns>
-    float[] EyebrowUpCalculation(Point[] points, Point[] basePoints)
+    float EyebrowUpCalculation(Point[] points, Point[] basePoints)
     {
-        Point[] cashe = points.OrderBy(p => p.X).ToArray();
-        Point minX = cashe.First();
-        Point maxX = cashe.Last();
-        cashe = basePoints.OrderBy(p => p.X).ToArray();
-        Point baseMinX = cashe.First();
-        Point baseMaxX = cashe.Last();
+        OpenCvSharp.Rect rect = GetRegion(points);
+        OpenCvSharp.Rect baseRect = GetRegion(basePoints);
 
-        return new float[]{ minX.Y - baseMinX.Y, maxX.Y - baseMaxX.Y };
+        float returnal = (rect.Y - baseRect.Y) / (baseRect.Height / 2f);
+
+        return returnal;
     }
 
 
@@ -393,7 +391,7 @@ public class FaceTracking : WebCamera, IGetFaceData
         OpenCvSharp.Rect rect = GetRegion(points);
         OpenCvSharp.Rect baseRect = GetRegion(basePoints);
 
-        float returnal = rect.Height / (float)baseRect.Height;
+        float returnal = (rect.Height / (float)baseRect.Height) - 0.5f;
 
         return returnal; 
     }
@@ -424,5 +422,5 @@ public interface IGetFaceData
     float[] EyesOpenDiff { get;}
 
     /// <summary></summary>
-    float[][] EyebrowUpDiff { get; }
+    float[] EyebrowUpDiff { get; }
 }
